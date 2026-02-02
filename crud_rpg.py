@@ -36,30 +36,56 @@ def listar_personagens():
 
 def atualizar_personagem():
     listar_personagens()
-    indice = int(input("Digite o índice do personagem: "))
-
+    entrada = input("Digite o índice do personagem: ")
+    if not entrada.isdigit():
+        print("Por favor, digite um número válido.")
+        return
+    indice = int(entrada)
     if indice < 0 or indice >= len(personagens):
         print("Índice inválido")
         return
-
     personagem = personagens[indice]
-
-    personagem["nome"] = input("Novo nome: ")
-    personagem["forca"] = int(input("Nova força: "))
-    personagem["defesa"] = int(input("Nova defesa: "))
-    personagem["vida"] = int(input("Nova vida: "))
-
-    print("Personagem atualizado!")
+    while True:
+        print("\nQual atributo deseja mudar?")
+        print("1 - Nome")
+        print("2 - Força")
+        print("3 - Defesa")
+        print("4 - Vida")
+        print("0 - Sair")
+        escolha = input("Escolha uma opção: ")
+        if escolha == "1":
+            novo_nome = input(f"Novo nome [{personagem['nome']}]: ")
+            if novo_nome:
+                personagem["nome"] = novo_nome
+        elif escolha == "2":
+            nova_forca = input(f"Nova força [{personagem['forca']}]: ")
+            if nova_forca.isdigit():
+                personagem["forca"] = int(nova_forca)
+        elif escolha == "3":
+            nova_defesa = input(f"Nova defesa [{personagem['defesa']}]: ")
+            if nova_defesa.isdigit():
+                personagem["defesa"] = int(nova_defesa)
+        elif escolha == "4":
+            nova_vida = input(f"Nova vida [{personagem['vida']}]: ")
+            if nova_vida.isdigit():
+                personagem["vida"] = int(nova_vida)
+        elif escolha == "0":
+            print("Personagem atualizado!")
+            break
+        else:
+            print("Opção inválida.")
 
 
 def deletar_personagem():
     listar_personagens()
-    indice = int(input("Digite o índice do personagem: "))
-
+    entrada = input("Digite o índice do personagem: (se quiser sair clique em qualquer letra) ")
+    if not entrada.isdigit():
+        print("Por favor, digite um número válido.")
+        return
+    indice = int(entrada)
     if indice < 0 or indice >= len(personagens):
         print("Índice inválido")
         return
-
     personagens.pop(indice)
     print("Personagem removido!")
 
