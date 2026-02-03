@@ -24,9 +24,27 @@ def exibir():
 
 def criar():
     nome = input("Nome: ")
-    forca = int(input("Força: "))
-    defesa = int(input("Defesa: "))
-    vida = int(input("Vida: "))
+    
+    while True:
+        try:
+            forca = int(input("Força: "))
+            break
+        except ValueError:
+            print("Digite um número válido.\n")
+    
+    while True:
+        try:
+            defesa = int(input("Defesa: "))
+            break
+        except ValueError:
+            print("Digite um número válido.\n")
+    
+    while True:
+        try:
+            vida = int(input("Vida: "))
+            break
+        except ValueError:
+            print("Digite um número válido.\n")
     
     personagens.append({"nome": nome, "forca": forca, "defesa": defesa, "vida": vida})
     salvar()
@@ -34,7 +52,13 @@ def criar():
 
 def atualizar():
     exibir()
-    idx = int(input("Índice: "))
+    
+    while True:
+        try:
+            idx = int(input("Índice: "))
+            break
+        except ValueError:
+            print("Digite um número válido.\n")
     
     if idx < 0 or idx >= len(personagens):
         print("Inválido\n")
@@ -47,14 +71,32 @@ def atualizar():
         op = input("Opção: ")
         if op == "1":
             p["nome"] = input("Novo nome: ")
-        elif op == "2":
-            p["forca"] = int(input("Nova força: "))
-        elif op == "3":
-            p["defesa"] = int(input("Nova defesa: "))
-        elif op == "4":
-            p["vida"] = int(input("Nova vida: "))
-        elif op == "0":
             salvar()
+        elif op == "2":
+            while True:
+                try:
+                    p["forca"] = int(input("Nova força: "))
+                    break
+                except ValueError:
+                    print("Digite um número válido.")
+            salvar()
+        elif op == "3":
+            while True:
+                try:
+                    p["defesa"] = int(input("Nova defesa: "))
+                    break
+                except ValueError:
+                    print("Digite um número válido.")
+            salvar()
+        elif op == "4":
+            while True:
+                try:
+                    p["vida"] = int(input("Nova vida: "))
+                    break
+                except ValueError:
+                    print("Digite um número válido.")
+            salvar()
+        elif op == "0":
             print("OK\n")
             break
         else:
@@ -62,7 +104,13 @@ def atualizar():
 
 def deletar():
     exibir()
-    idx = int(input("Índice: "))
+    
+    while True:
+        try:
+            idx = int(input("Índice: "))
+            break
+        except ValueError:
+            print("Digite um número válido.\n")
     
     if idx < 0 or idx >= len(personagens):
         print("Inválido\n")
@@ -82,8 +130,19 @@ def comparar():
         print("Precisa 2+\n")
         return
     
-    i1 = int(input("Primeiro: "))
-    i2 = int(input("Segundo: "))
+    while True:
+        try:
+            i1 = int(input("Primeiro: "))
+            break
+        except ValueError:
+            print("Digite um número válido.\n")
+    
+    while True:
+        try:
+            i2 = int(input("Segundo: "))
+            break
+        except ValueError:
+            print("Digite um número válido.\n")
     
     if i1 < 0 or i1 >= len(personagens) or i2 < 0 or i2 >= len(personagens) or i1 == i2:
         print("Inválido\n")
@@ -104,8 +163,18 @@ def main():
     carregar()
     
     while True:
-        print("1-Criar 2-Listar 3-Atualizar 4-Deletar 5-Comparar 0-Sair")
-        op = input("Opção: ")
+        print("\n" + "="*50)
+        print(" "*15 + "CRUD RPG")
+        print("="*50)
+        print("1 - Criar personagem")
+        print("2 - Listar personagens")
+        print("3 - Atualizar personagem")
+        print("4 - Deletar personagem")
+        print("5 - Comparar personagens")
+        print("0 - Sair")
+        print("="*50)
+        
+        op = input("Escolha uma opção: ")
         
         if op == "1":
             criar()
@@ -118,9 +187,9 @@ def main():
         elif op == "5":
             comparar()
         elif op == "0":
-            print("Saindo")
+            print("\nSaindo...")
             break
         else:
-            print("Inválido\n")
+            print("Opção inválida.\n")
 
 main()
