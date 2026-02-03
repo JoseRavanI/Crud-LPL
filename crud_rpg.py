@@ -1,221 +1,126 @@
 import json
 import os
 
-ARQUIVO_JSON = "personagens.json"
+ARQUIVO = "personagens.json"
+personagens = []
 
-def carregar_personagens():
-    if os.path.exists(ARQUIVO_JSON):
-        with open(ARQUIVO_JSON, "r", encoding="utf-8") as f:
-            return json.load(f)
-    return []
-
-def salvar_personagens():
-    with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
+def salvar():
+    with open(ARQUIVO, "w", encoding="utf-8") as f:
         json.dump(personagens, f, ensure_ascii=False, indent=2)
 
-personagens = carregar_personagens()
+def carregar():
+    global personagens
+    if os.path.exists(ARQUIVO):
+        with open(ARQUIVO, "r", encoding="utf-8") as f:
+            personagens = json.load(f)
 
-def criar_personagem():
-    while True:
-        nome = input("Nome do personagem: ")
-        if nome:
-            break
-        print("Nome não pode estar vazio.")
-    
-    while True:
-        entrada_forca = input("Força: ")
-        if entrada_forca.isdigit():
-            forca = int(entrada_forca)
-            break
-        print("Força deve ser um número válido.")
-    
-    while True:
-        entrada_defesa = input("Defesa: ")
-        if entrada_defesa.isdigit():
-            defesa = int(entrada_defesa)
-            break
-        print("Defesa deve ser um número válido.")
-    
-    while True:
-        entrada_vida = input("Vida: ")
-        if entrada_vida.isdigit():
-            vida = int(entrada_vida)
-            break
-        print("Vida deve ser um número válido.")
-
-    personagem = {
-        "nome": nome,
-        "forca": forca,
-        "defesa": defesa,
-        "vida": vida
-    }
-
-    personagens.append(personagem)
-    salvar_personagens()
-    print("Personagem criado com sucesso!")
-
-
-def listar_personagens():
+def exibir():
     if not personagens:
-        print("Nenhum personagem cadastrado.")
+        print("Vazio\n")
         return
-
     for i, p in enumerate(personagens):
-        print(f"""
-        [{i}]
-        Nome: {p['nome']}
-        Força: {p['forca']}
-        Defesa: {p['defesa']}
-        Vida: {p['vida']}
-        """)
+        print(f"[{i}] {p['nome']} - F:{p['forca']} D:{p['defesa']} V:{p['vida']}")
+    print()
 
+def criar():
+    nome = input("Nome: ")
+    forca = int(input("Força: "))
+    defesa = int(input("Defesa: "))
+    vida = int(input("Vida: "))
+    
+    personagens.append({"nome": nome, "forca": forca, "defesa": defesa, "vida": vida})
+    salvar()
+    print("OK\n")
 
-
-def atualizar_personagem():
-    listar_personagens()
-    entrada = input("Digite o índice do personagem: ")
-    if not entrada.isdigit():
-        print("Por favor, digite um número válido.")
+def atualizar():
+    exibir()
+    idx = int(input("Índice: "))
+    
+    if idx < 0 or idx >= len(personagens):
+        print("Inválido\n")
         return
-    indice = int(entrada)
-    if indice < 0 or indice >= len(personagens):
-        print("Índice inválido")
-        return
-    personagem = personagens[indice]
-    alterado = False
+    
+    p = personagens[idx]
+    print(f"\n1-Nome 2-Força 3-Defesa 4-Vida 0-Sair")
+    
     while True:
-        print("\nQual atributo deseja mudar?")
-        print("1 - Nome")
-        print("2 - Força")
-        print("3 - Defesa")
-        print("4 - Vida")
-        print("0 - Sair")
-        escolha = input("Escolha uma opção: ")
-        if escolha == "1":
-            novo_nome = input(f"Novo nome [{personagem['nome']}]: ")
-            if novo_nome:
-                personagem["nome"] = novo_nome
-                alterado = True
-        elif escolha == "2":
-            nova_forca = input(f"Nova força [{personagem['forca']}]: ")
-            if nova_forca.isdigit():
-                personagem["forca"] = int(nova_forca)
-                alterado = True
-        elif escolha == "3":
-            nova_defesa = input(f"Nova defesa [{personagem['defesa']}]: ")
-            if nova_defesa.isdigit():
-                personagem["defesa"] = int(nova_defesa)
-                alterado = True
-        elif escolha == "4":
-            nova_vida = input(f"Nova vida [{personagem['vida']}]: ")
-            if nova_vida.isdigit():
-                personagem["vida"] = int(nova_vida)
-                alterado = True
-        elif escolha == "0":
-            if alterado:
-                salvar_personagens()
-            print("Personagem atualizado!")
+        op = input("Opção: ")
+        if op == "1":
+            p["nome"] = input("Novo nome: ")
+        elif op == "2":
+            p["forca"] = int(input("Nova força: "))
+        elif op == "3":
+            p["defesa"] = int(input("Nova defesa: "))
+        elif op == "4":
+            p["vida"] = int(input("Nova vida: "))
+        elif op == "0":
+            salvar()
+            print("OK\n")
             break
         else:
-            print("Opção inválida.")
+            print("Inválido")
 
-
-def deletar_personagem():
-    listar_personagens()
-    entrada = input("Digite o índice do personagem: ")
-    if not entrada.isdigit():
-        print("Por favor, digite um número válido.")
-        return
-    indice = int(entrada)
-    if indice < 0 or indice >= len(personagens):
-        print("Índice inválido")
-        return
-    personagens.pop(indice)
-    salvar_personagens()
-    print("Personagem removido!")
-
-
-def calcular_poder(personagem):
-    return personagem["forca"] * 2 + personagem["defesa"] + personagem["vida"]
-
-
-def comparar_personagens():
-    if not personagens:
-        print("Nenhum personagem cadastrado.")
+def deletar():
+    exibir()
+    idx = int(input("Índice: "))
+    
+    if idx < 0 or idx >= len(personagens):
+        print("Inválido\n")
         return
     
-    listar_personagens()
+    personagens.pop(idx)
+    salvar()
+    print("OK\n")
 
-    while True:
-        entrada_i1 = input("Índice do primeiro personagem: ")
-        if entrada_i1.isdigit():
-            i1 = int(entrada_i1)
-            if 0 <= i1 < len(personagens):
-                break
-            print("Índice inválido.")
-        else:
-            print("Por favor, digite um número válido.")
+def poder(p):
+    return p["forca"] * 2 + p["defesa"] + p["vida"]
+
+def comparar():
+    exibir()
     
-    while True:
-        entrada_i2 = input("Índice do segundo personagem: ")
-        if entrada_i2.isdigit():
-            i2 = int(entrada_i2)
-            if 0 <= i2 < len(personagens):
-                break
-            print("Índice inválido.")
-        else:
-            print("Por favor, digite um número válido.")
-    
-    if i1 == i2:
-        print("Escolha personagens diferentes.")
+    if len(personagens) < 2:
+        print("Precisa 2+\n")
         return
-
-    p1 = personagens[i1]
-    p2 = personagens[i2]
-
-    poder1 = calcular_poder(p1)
-    poder2 = calcular_poder(p2)
-
-    print(f"\nBATALHA")
-    print(f"{p1['nome']} (Poder: {poder1}) VS {p2['nome']} (Poder: {poder2})")
-
-    if poder1 > poder2:
-        print(f"{p1['nome']} venceu!")
-    elif poder2 > poder1:
-        print(f"{p2['nome']} venceu!")
+    
+    i1 = int(input("Primeiro: "))
+    i2 = int(input("Segundo: "))
+    
+    if i1 < 0 or i1 >= len(personagens) or i2 < 0 or i2 >= len(personagens) or i1 == i2:
+        print("Inválido\n")
+        return
+    
+    p1, p2 = personagens[i1], personagens[i2]
+    pot1, pot2 = poder(p1), poder(p2)
+    
+    print(f"\n{p1['nome']} ({pot1}) VS {p2['nome']} ({pot2})")
+    if pot1 > pot2:
+        print(f"{p1['nome']} venceu\n")
+    elif pot2 > pot1:
+        print(f"{p2['nome']} venceu\n")
     else:
-        print("Empate!")
+        print("Empate\n")
 
-
-def menu():
+def main():
+    carregar()
+    
     while True:
-        print("""
-=== CRUD RPG ===
-1 - Criar personagem
-2 - Listar personagens
-3 - Atualizar personagem
-4 - Deletar personagem
-5 - Comparar personagens
-0 - Sair
-""")
-
-        opcao = input("Escolha uma opção: ")
-
-        if opcao == "1":
-            criar_personagem()
-        elif opcao == "2":
-            listar_personagens()
-        elif opcao == "3":
-            atualizar_personagem()
-        elif opcao == "4":
-            deletar_personagem()
-        elif opcao == "5":
-            comparar_personagens()
-        elif opcao == "0":
-            print("Saindo...")
+        print("1-Criar 2-Listar 3-Atualizar 4-Deletar 5-Comparar 0-Sair")
+        op = input("Opção: ")
+        
+        if op == "1":
+            criar()
+        elif op == "2":
+            exibir()
+        elif op == "3":
+            atualizar()
+        elif op == "4":
+            deletar()
+        elif op == "5":
+            comparar()
+        elif op == "0":
+            print("Saindo")
             break
         else:
-            print("Opção inválida")
+            print("Inválido\n")
 
-
-menu()
+main()
