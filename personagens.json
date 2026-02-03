@@ -1,0 +1,14 @@
+[
+  {
+    "nome": "jose",
+    "forca": 10,
+    "defesa": 4,
+    "vida": 10
+  },
+  {
+    "nome": "jsj",
+    "forca": 10,
+    "defesa": 30,
+    "vida": 2
+  }
+]

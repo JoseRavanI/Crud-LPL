@@ -1,11 +1,47 @@
-personagens = []
+import json
+import os
 
+ARQUIVO_JSON = "personagens.json"
+
+def carregar_personagens():
+    if os.path.exists(ARQUIVO_JSON):
+        with open(ARQUIVO_JSON, "r", encoding="utf-8") as f:
+            return json.load(f)
+    return []
+
+def salvar_personagens():
+    with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
+        json.dump(personagens, f, ensure_ascii=False, indent=2)
+
+personagens = carregar_personagens()
 
 def criar_personagem():
-    nome = input("Nome do personagem: ")
-    forca = int(input("Força: "))
-    defesa = int(input("Defesa: "))
-    vida = int(input("Vida: "))
+    while True:
+        nome = input("Nome do personagem: ")
+        if nome:
+            break
+        print("Nome não pode estar vazio.")
+    
+    while True:
+        entrada_forca = input("Força: ")
+        if entrada_forca.isdigit():
+            forca = int(entrada_forca)
+            break
+        print("Força deve ser um número válido.")
+    
+    while True:
+        entrada_defesa = input("Defesa: ")
+        if entrada_defesa.isdigit():
+            defesa = int(entrada_defesa)
+            break
+        print("Defesa deve ser um número válido.")
+    
+    while True:
+        entrada_vida = input("Vida: ")
+        if entrada_vida.isdigit():
+            vida = int(entrada_vida)
+            break
+        print("Vida deve ser um número válido.")
 
     personagem = {
         "nome": nome,
@@ -15,6 +51,7 @@ def criar_personagem():
     }
 
     personagens.append(personagem)
+    salvar_personagens()
     print("Personagem criado com sucesso!")
 
 
@@ -45,6 +82,7 @@ def atualizar_personagem():
         print("Índice inválido")
         return
     personagem = personagens[indice]
+    alterado = False
     while True:
         print("\nQual atributo deseja mudar?")
         print("1 - Nome")
@@ -57,19 +95,25 @@ def atualizar_personagem():
             novo_nome = input(f"Novo nome [{personagem['nome']}]: ")
             if novo_nome:
                 personagem["nome"] = novo_nome
+                alterado = True
         elif escolha == "2":
             nova_forca = input(f"Nova força [{personagem['forca']}]: ")
             if nova_forca.isdigit():
                 personagem["forca"] = int(nova_forca)
+                alterado = True
         elif escolha == "3":
             nova_defesa = input(f"Nova defesa [{personagem['defesa']}]: ")
             if nova_defesa.isdigit():
                 personagem["defesa"] = int(nova_defesa)
+                alterado = True
         elif escolha == "4":
             nova_vida = input(f"Nova vida [{personagem['vida']}]: ")
             if nova_vida.isdigit():
                 personagem["vida"] = int(nova_vida)
+                alterado = True
         elif escolha == "0":
+            if alterado:
+                salvar_personagens()
             print("Personagem atualizado!")
             break
         else:
@@ -78,7 +122,7 @@ def atualizar_personagem():
 
 def deletar_personagem():
     listar_personagens()
-    entrada = input("Digite o índice do personagem: (se quiser sair clique em qualquer letra) ")
+    entrada = input("Digite o índice do personagem: ")
     if not entrada.isdigit():
         print("Por favor, digite um número válido.")
         return
@@ -87,6 +131,7 @@ def deletar_personagem():
         print("Índice inválido")
         return
     personagens.pop(indice)
+    salvar_personagens()
     print("Personagem removido!")
 
 
@@ -95,11 +140,32 @@ def calcular_poder(personagem):
 
 
 def comparar_personagens():
+    if not personagens:
+        print("Nenhum personagem cadastrado.")
+        return
+    
     listar_personagens()
 
-    i1 = int(input("Índice do primeiro personagem: "))
-    i2 = int(input("Índice do segundo personagem: "))
-
+    while True:
+        entrada_i1 = input("Índice do primeiro personagem: ")
+        if entrada_i1.isdigit():
+            i1 = int(entrada_i1)
+            if 0 <= i1 < len(personagens):
+                break
+            print("Índice inválido.")
+        else:
+            print("Por favor, digite um número válido.")
+    
+    while True:
+        entrada_i2 = input("Índice do segundo personagem: ")
+        if entrada_i2.isdigit():
+            i2 = int(entrada_i2)
+            if 0 <= i2 < len(personagens):
+                break
+            print("Índice inválido.")
+        else:
+            print("Por favor, digite um número válido.")
+    
     if i1 == i2:
         print("Escolha personagens diferentes.")
         return
