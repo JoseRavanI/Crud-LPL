@@ -60,7 +60,7 @@ def atualizar():
         except ValueError:
             print("Digite um número válido.\n")
     
-    if idx < 0 or idx >= len(personagens):
+    if not existe(idx):
         print("Inválido\n")
         return
     
@@ -112,13 +112,30 @@ def deletar():
         except ValueError:
             print("Digite um número válido.\n")
     
-    if idx < 0 or idx >= len(personagens):
+    if not existe(idx):
         print("Inválido\n")
         return
     
     personagens.pop(idx)
     salvar()
     print("OK\n")
+
+def existe(idx):
+    return 0 <= idx < len(personagens)
+
+def buscar():
+    nome = input("Nome para buscar: ").lower()
+    encontrados = [i for i, p in enumerate(personagens) if nome in p["nome"].lower()]
+    
+    if not encontrados:
+        print("Nenhum personagem encontrado.\n")
+        return
+    
+    print()
+    for i in encontrados:
+        p = personagens[i]
+        print(f"[{i}] {p['nome']} - F:{p['forca']} D:{p['defesa']} V:{p['vida']}")
+    print()
 
 def poder(p):
     return p["forca"] * 2 + p["defesa"] + p["vida"]
@@ -168,9 +185,10 @@ def main():
         print("="*50)
         print("1 - Criar personagem")
         print("2 - Listar personagens")
-        print("3 - Atualizar personagem")
-        print("4 - Deletar personagem")
-        print("5 - Comparar personagens")
+        print("3 - Buscar personagem")
+        print("4 - Atualizar personagem")
+        print("5 - Deletar personagem")
+        print("6 - Comparar personagens")
         print("0 - Sair")
         print("="*50)
         
@@ -181,10 +199,12 @@ def main():
         elif op == "2":
             exibir()
         elif op == "3":
-            atualizar()
+            buscar()
         elif op == "4":
-            deletar()
+            atualizar()
         elif op == "5":
+            deletar()
+        elif op == "6":
             comparar()
         elif op == "0":
             print("\nSaindo...")
